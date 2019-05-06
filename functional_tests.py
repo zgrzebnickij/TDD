@@ -6,7 +6,7 @@ class NewVistiorTests(unittest.TestCase):
 
   def setUp(self):
     self.browser = webdriver.Chrome()
-    self.browser.implicitly_wait(4)
+    self.browser.implicitly_wait(3)
 
   def tearDown(self):
     self.browser.quit()
@@ -34,19 +34,22 @@ class NewVistiorTests(unittest.TestCase):
     inputbox.send_keys(Keys.ENTER)
 
     table = self.browser.find_element_by_id("id_list_table")
-    rows = self.browser.find_elements_by_name("tr")
-    self.assertTrue(
-      any(row.text == "1: Buy spoon" for row in rows),
-      "New to-do item did not appear in table"
-    )
+    rows = self.browser.find_elements_by_tag_name("tr")
+    self.assertIn('1: Buy spoon', [row.text for row in rows])
 
     # Stil visible text box
     # entering new todo
-    self.fail("Finish the test!")
+    inputbox = self.browser.find_element_by_id("id_new_item")
+    inputbox.send_keys("Buy fork")
+    inputbox.send_keys(Keys.ENTER)
 
     # second update on page and to wisible items
-
+    table = self.browser.find_element_by_id("id_list_table")
+    rows = table.find_elements_by_tag_name("tr")
+    self.assertIn('1: Buy spoon', [row.text for row in rows])
+    self.assertIn('2: Buy fork', [row.text for row in rows])
     # Does the page remember items? Uniqe ulrs
+    self.fail("finish the test")
 
 if __name__ == "__main__":
   unittest.main(warnings='ignore')
