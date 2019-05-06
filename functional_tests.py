@@ -1,11 +1,12 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import unittest
 
 class NewVistiorTests(unittest.TestCase):
 
   def setUp(self):
     self.browser = webdriver.Chrome()
-    self.browser.implicitly_wait(5)
+    self.browser.implicitly_wait(4)
 
   def tearDown(self):
     self.browser.quit()
@@ -35,7 +36,8 @@ class NewVistiorTests(unittest.TestCase):
     table = self.browser.find_element_by_id("id_list_table")
     rows = self.browser.find_elements_by_name("tr")
     self.assertTrue(
-      any(row.text == "1: Buy spoon" for row in rows)
+      any(row.text == "1: Buy spoon" for row in rows),
+      "New to-do item did not appear in table"
     )
 
     # Stil visible text box
