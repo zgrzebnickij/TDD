@@ -1,4 +1,4 @@
-"db.sqlite3" 
-"chromedriver.exe" 
-"__pycache__/*" 
-"*.pyc" 
+db.sqlite3
+chromedriver.exe
+__pycache__/*
+*.pyc
