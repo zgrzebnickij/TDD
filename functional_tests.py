@@ -11,6 +11,11 @@ class NewVistiorTests(unittest.TestCase):
   def tearDown(self):
     self.browser.quit()
 
+  def check_for_row_in_table(self, row_text):
+    table = self.browser.find_element_by_id("id_list_table")
+    rows = table.find_elements_by_tag_name("tr")
+    self.assertIn(row_text, [row.text for row in rows])
+
   def test_can_start_a_list_and_retrive_it_later(self):
     self.browser.get("http://localhost:8000")
 
@@ -33,9 +38,7 @@ class NewVistiorTests(unittest.TestCase):
     # Visible new item in list
     inputbox.send_keys(Keys.ENTER)
 
-    table = self.browser.find_element_by_id("id_list_table")
-    rows = self.browser.find_elements_by_tag_name("tr")
-    self.assertIn('1: Buy spoon', [row.text for row in rows])
+    self.check_for_row_in_table("1: Buy spoon")
 
     # Stil visible text box
     # entering new todo
@@ -44,10 +47,8 @@ class NewVistiorTests(unittest.TestCase):
     inputbox.send_keys(Keys.ENTER)
 
     # second update on page and to wisible items
-    table = self.browser.find_element_by_id("id_list_table")
-    rows = table.find_elements_by_tag_name("tr")
-    self.assertIn('1: Buy spoon', [row.text for row in rows])
-    self.assertIn('2: Buy fork', [row.text for row in rows])
+    self.check_for_row_in_table('1: Buy spoon')
+    self.check_for_row_in_table('2: Buy fork')
     # Does the page remember items? Uniqe ulrs
     self.fail("finish the test")
 
