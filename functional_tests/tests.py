@@ -7,7 +7,7 @@ class NewVistiorTests(LiveServerTestCase):
 
   def setUp(self):
     self.browser = webdriver.Chrome()
-    self.browser.implicitly_wait(3)
+    self.browser.implicitly_wait(2)
 
   def tearDown(self):
     self.browser.quit()
@@ -39,6 +39,7 @@ class NewVistiorTests(LiveServerTestCase):
     # Visible new item in list
     inputbox.send_keys(Keys.ENTER)
     edith_list_url = self.browser.current_url
+    print(edith_list_url)
     self.assertRegex(edith_list_url, "/lists/.+")
     self.check_for_row_in_table("1: Buy spoon")
 
@@ -74,7 +75,7 @@ class NewVistiorTests(LiveServerTestCase):
     adam_list_url = self.browser.current_url
     self.assertRegex(adam_list_url, "/lists/.+")
     self.assertNotEqual(adam_list_url, edith_list_url)
-
+    
     # there is no trace of edith's list
     page_text = self.browser.find_element_by_tag_name("body").text
     self.assertNotIn("Buy spoon", page_text)
