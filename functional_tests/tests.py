@@ -32,13 +32,14 @@ class NewVistiorTests(LiveServerTestCase):
       "Enter a to-do item"
     )
 
-    # Typing "Buy spoon" into text box
+    # Typing "Buy spoon" into text box by Edith
     inputbox.send_keys("Buy spoon")
 
     # Updating page after hiting enter
     # Visible new item in list
     inputbox.send_keys(Keys.ENTER)
-
+    edith_list_url = self.browser.current_url
+    self.assertRegex(edith_list_url, "/lists/.+")
     self.check_for_row_in_table("1: Buy spoon")
 
     # Stil visible text box
@@ -47,8 +48,36 @@ class NewVistiorTests(LiveServerTestCase):
     inputbox.send_keys("Buy fork")
     inputbox.send_keys(Keys.ENTER)
 
-    # second update on page and to wisible items
+    # second update on page and to wisible items of Edith
     self.check_for_row_in_table('1: Buy spoon')
     self.check_for_row_in_table('2: Buy fork')
+
     # Does the page remember items? Uniqe ulrs
-    self.fail("finish the test")
+    # Ues new session to make sure no information
+    # is comming from cookies
+    self.browser.quit()
+    self.browser = webdriver.Chrome()
+
+    # Adam visit the home page. there is no sign of eddit's
+    # list
+    self.browser.get(self.live_server_url)
+    page_text = self.browser.find_element_by_tag_name("body").text
+    self.assertNotIn("Buy spoon", page_text)
+    self.assertNotIn("Buy fork", page_text)
+
+    # Adam start new list by entering a new item
+    inputbox = self.browser.find_element_by_id("id_new_item")
+    inputbox.send_keys("Buy milk")
+    inputbox.send_keys(Keys.ENTER)
+
+    # Adam get his own unique URL
+    adam_list_url = self.browser.current_url
+    self.assertRegex(adam_list_url, "/lists/.+")
+    self.assertNotEqual(adam_list_url, edith_list_url)
+
+    # there is no trace of edith's list
+    page_text = self.browser.find_element_by_tag_name("body").text
+    self.assertNotIn("Buy spoon", page_text)
+    self.assertIn("Buy milk", page_text)
+
+    # satisfied, the both go to sleep
