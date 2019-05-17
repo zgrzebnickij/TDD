@@ -2,8 +2,23 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
+import sys
 
 class NewVistiorTests(StaticLiveServerTestCase):
+
+  @classmethod
+  def setUpClass(cls):
+    for arg in sys.argv:
+      if "liveserver" in arg:
+        cls.server_url = "http://" + arg.split("=")[1]
+        return #
+    super().setUpClass()
+    cls.server_url = cls.live_server_url
+
+  @classmethod
+  def tearDownClass(cls):
+    if cls.server_url == cls.live_server_url:
+      super().tearDownClass()
 
   def setUp(self):
     self.browser = webdriver.Chrome()
@@ -18,7 +33,7 @@ class NewVistiorTests(StaticLiveServerTestCase):
     self.assertIn(row_text, [row.text for row in rows])
 
   def test_can_start_a_list_and_retrive_it_later(self):
-    self.browser.get(self.live_server_url)
+    self.browser.get(self.server_url)
 
     # Page title and header mention to-do list
     assert "To-Do" in self.browser.title
@@ -61,7 +76,7 @@ class NewVistiorTests(StaticLiveServerTestCase):
 
     # Adam visit the home page. there is no sign of eddit's
     # list
-    self.browser.get(self.live_server_url)
+    self.browser.get(self.server_url)
     page_text = self.browser.find_element_by_tag_name("body").text
     self.assertNotIn("Buy spoon", page_text)
     self.assertNotIn("Buy fork", page_text)
@@ -85,7 +100,7 @@ class NewVistiorTests(StaticLiveServerTestCase):
   
   def test_layout_and_styling(self):
     #Adam goest to the home page
-    self.browser.get(self.live_server_url)
+    self.browser.get(self.server_url)
     self.browser.set_window_size(1024, 768)
 
     #He noticed the input box is nicely centered
