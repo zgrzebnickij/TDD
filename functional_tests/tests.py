@@ -1,10 +1,10 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import unittest
 import sys
 
-class NewVistiorTests(StaticLiveServerTestCase):
+
+class NewVisitorTests(StaticLiveServerTestCase):
 
   @classmethod
   def setUpClass(cls):
@@ -32,13 +32,13 @@ class NewVistiorTests(StaticLiveServerTestCase):
     rows = table.find_elements_by_tag_name("tr")
     self.assertIn(row_text, [row.text for row in rows])
 
-  def test_can_start_a_list_and_retrive_it_later(self):
+  def test_can_start_a_list_and_retrieve_it_later(self):
     self.browser.get(self.server_url)
 
     # Page title and header mention to-do list
-    assert "To-Do" in self.browser.title
+    self.assertIn("To-Do", self.browser.title)
     header_text = self.browser.find_element_by_tag_name("h1").text
-    self.assertIn("To-Do", header_text)
+    self.assertIn("To-Do", header_text, f'Not found To-Do in {header_text}')
 
     # Invitation for entering to-do item
     inputbox = self.browser.find_element_by_id("id_new_item")

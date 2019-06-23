@@ -7,6 +7,7 @@ from lists.views import home_page
 from lists.models import Item, List
 import re
 
+
 class HomePageTest(TestCase):
    
   def test_root_url_resolve_to_home_page_viev(self):
@@ -29,6 +30,7 @@ class HomePageTest(TestCase):
           self.remove_csrf(html_code1),
           self.remove_csrf(html_code2)
       )
+
 
 class ListAndModelTest(TestCase):
 
@@ -84,6 +86,7 @@ class ListViewTest(TestCase):
     correct_list = List.objects.create()
     response = self.client.get(f"/lists/{correct_list.id}/")
     self.assertEqual(response.context["list"], correct_list)
+
 
 class NewListTest(TestCase):
 
